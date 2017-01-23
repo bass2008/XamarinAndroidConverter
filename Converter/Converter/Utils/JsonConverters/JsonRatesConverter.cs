@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using Converter.Models.Json;
 using Newtonsoft.Json;
 
@@ -38,7 +39,10 @@ namespace Converter.Utils.JsonConverters
 
                 var key = reader.Value.ToString();
                 var value = reader.ReadAsString();
-                var decimalValue = MethodHelpers.Parse(value);
+                decimal decimalValue;
+                if(decimal.TryParse(value, NumberStyles.Any, new CultureInfo("en-US"), out decimalValue) == false) 
+                    throw new FormatException($"The value {value } cannot be converted to an decimal");
+
                 obj.Fields.Add(key, decimalValue);
             }
 
